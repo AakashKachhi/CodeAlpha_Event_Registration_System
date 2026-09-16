@@ -1,7 +1,10 @@
 import User from "../models/user.model.js"
 
-
-import { createEventService, getEvents } from "../services/event.service.js"
+import {
+  createEventService,
+  getEvent,
+  getEvents,
+} from "../services/event.service.js"
 
 export const createEvent = async (req, res) => {
   const { eventName, date, location, description, capacity } = req.body
@@ -23,32 +26,53 @@ export const createEvent = async (req, res) => {
       req.user.userId,
     )
 
-    res
-      .status(201)
-      .json({
-        message: "Event Created",
-        data: {
-          EventName: event.eventName,
-          Date: event.date,
-          Location: event.location,
-          Description: event.description,
-          Capacity: event.capacity,
-        },
-      })
+    res.status(201).json({
+      message: "Event Created",
+      data: {
+        EventName: event.eventName,
+        Date: event.date,
+        Location: event.location,
+        Description: event.description,
+        Capacity: event.capacity,
+      },
+    })
   } catch (error) {
-    return res.status(500).json({ message: "Something went wrong" })
+     if (error.message === "Invalid User") {
+    return res.status(403).json({
+      message: error.message
+    })
+  }
+
+  return res.status(500).json({
+    message: "Something went wrong"
+  })
   }
 }
 
-export const getAllEvents = async(req, res) => {
-    try {
-        const events = await getEvents()
+export const getAllEvents = async (req, res) => {
+  try {
+    const events = await getEvents()
 
-        if(events.length === 0) return res.status(404).json({message: "No Event found"})
+    if (events.length === 0)
+      return res.status(404).json({ message: "No Event found" })
 
-        res.status(200).json({message: "All Events", events: events})
- 
-    } catch (error) {
-        return res.status(500).json({message: "Something went wrong"})
-    }
+    res.status(200).json({ message: "All Events", events: events })
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Something went wrong", error: error.message })
+  }
+}
+
+export const getEventById = async (req, res) => {
+  const eventId = req.params.eventId
+
+  try {
+    const event = await getEvent(eventId)
+    if (!event) return res.status(404).json({ message: "Not found" })
+
+    res.status(200).json({ message: "This is the Event", event: event })
+  } catch (error) {
+    return res.status(500).json({ error: error.message })
+  }
 }

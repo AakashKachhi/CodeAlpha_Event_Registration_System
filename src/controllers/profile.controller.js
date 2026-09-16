@@ -12,6 +12,6 @@ export const getProfile = async (req, res) => {
             email: profile.email
         })
     } catch (error) {
-        return res.status(500).json({message: "Something went wrong"})
+        return res.status(500).json({error: error.message})
     }
 }
