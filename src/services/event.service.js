@@ -18,3 +18,7 @@ export const createEventService = async (eventName, date, location, description,
 export const getEvents = async () => {
     return await Event.find()
 }
+
+export const getEvent = async (eventId) => {
+    return await Event.findById(eventId)
+}
