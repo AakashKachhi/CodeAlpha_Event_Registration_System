@@ -28,3 +28,18 @@ export const eventRegistration = async (userId , eventId) => {
 
    
 }
+
+export const getUserRegistrationsService =  async (userId) => {
+    return await Registration.find({user: userId})
+}
+
+export const cancelUserRegistrationService = async (userId, eventId) => {
+    try {
+        const cancelRegistration = await Registration.findOneAndDelete({user: userId, event: eventId})
+        if(cancelRegistration === null) throw new Error("No Registration Found")
+        
+        return cancelRegistration
+    } catch (error) {
+        throw error
+    }
+}
