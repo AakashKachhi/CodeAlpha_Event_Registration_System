@@ -30,7 +30,7 @@ export const eventRegistration = async (userId , eventId) => {
 }
 
 export const getUserRegistrationsService =  async (userId) => {
-    return await Registration.find({user: userId})
+    return await Registration.find({user: userId}).populate("event")
 }
 
 export const cancelUserRegistrationService = async (userId, eventId) => {

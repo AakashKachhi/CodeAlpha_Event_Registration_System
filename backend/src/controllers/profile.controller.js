@@ -9,7 +9,8 @@ export const getProfile = async (req, res) => {
         res.status(200).json({
             displayName: profile.displayName,
             username: profile.username,
-            email: profile.email
+            email: profile.email,
+            role: profile.role
         })
     } catch (error) {
         return res.status(500).json({error: error.message})
